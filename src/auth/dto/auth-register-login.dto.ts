@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
+import { IsEmail, IsNotEmpty, MinLength, IsEnum } from 'class-validator';
 import { Transform } from 'class-transformer';
+import { UserType } from '../../users/domain/enums/user-type.enum';
 import { lowerCaseTransformer } from '../../utils/transformers/lower-case.transformer';
 
 export class AuthRegisterLoginDto {
@@ -20,4 +21,9 @@ export class AuthRegisterLoginDto {
   @ApiProperty({ example: 'Doe' })
   @IsNotEmpty()
   lastName: string;
+
+  @ApiProperty({ enum: UserType, enumName: 'UserType' })
+  @IsEnum(UserType)
+  @IsNotEmpty()
+  userType: UserType;
 }
