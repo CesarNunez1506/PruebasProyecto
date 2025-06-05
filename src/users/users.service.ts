@@ -125,6 +125,9 @@ export class UsersService {
       status: status,
       provider: createUserDto.provider ?? AuthProvidersEnum.email,
       socialId: createUserDto.socialId,
+      userType: createUserDto.userType, // Added
+      phone: createUserDto.phone, // Added
+      address: createUserDto.address, // Added
     });
   }
 
@@ -175,6 +178,24 @@ export class UsersService {
   ): Promise<User | null> {
     // Do not remove comment below.
     // <updating-property />
+
+    // Handling documentFileId
+    let documentFile: FileType | null | undefined = undefined;
+    if (updateUserDto.documentFileId) {
+      const fileObject = await this.filesService.findById(updateUserDto.documentFileId);
+      if (!fileObject) {
+        throw new UnprocessableEntityException({
+          status: HttpStatus.UNPROCESSABLE_ENTITY,
+          errors: {
+            documentFileId: 'fileNotExists',
+          },
+        });
+      }
+      documentFile = fileObject;
+    } else if (updateUserDto.documentFileId === null) { // Allow unsetting the document file
+      documentFile = null;
+    }
+
 
     let password: string | undefined = undefined;
 
@@ -279,6 +300,11 @@ export class UsersService {
       status,
       provider: updateUserDto.provider,
       socialId: updateUserDto.socialId,
+      phone: updateUserDto.phone, // Added
+      address: updateUserDto.address, // Added
+      documentType: updateUserDto.documentType, // Added
+      documentFile: documentFile, // Added FileType object or null
+      verificationStatus: updateUserDto.verificationStatus, // Added
     });
   }
 

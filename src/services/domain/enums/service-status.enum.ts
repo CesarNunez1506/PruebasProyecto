@@ -1,0 +1,6 @@
+export enum ServiceStatus {
+  PENDING = 'PENDING',
+  ACCEPTED = 'ACCEPTED',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED',
+}

@@ -1,6 +1,9 @@
 import { Exclude, Expose } from 'class-transformer';
 import { FileType } from '../../files/domain/file';
 import { Role } from '../../roles/domain/role';
+import { UserType } from './enums/user-type.enum';
+import { DocumentType } from './enums/document-type.enum';
+import { VerificationStatus } from './enums/verification-status.enum';
 import { Status } from '../../statuses/domain/status';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -71,4 +74,26 @@ export class User {
 
   @ApiProperty()
   deletedAt: Date;
+
+  @ApiProperty({ enum: UserType })
+  userType: UserType;
+
+  @ApiProperty({ type: String, required: false })
+  phone?: string;
+
+  @ApiProperty({ type: String, required: false })
+  address?: string;
+
+  @ApiProperty({ enum: DocumentType, required: false })
+  documentType?: DocumentType;
+
+  @ApiProperty({ type: () => FileType, required: false })
+  documentFile?: FileType | null;
+
+  @ApiProperty({
+    enum: VerificationStatus,
+    default: VerificationStatus.PENDING,
+    required: false,
+  })
+  verificationStatus?: VerificationStatus;
 }

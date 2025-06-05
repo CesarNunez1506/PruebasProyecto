@@ -22,6 +22,7 @@ import { JwtRefreshPayloadType } from './strategies/types/jwt-refresh-payload.ty
 import { JwtPayloadType } from './strategies/types/jwt-payload.type';
 import { UsersService } from '../users/users.service';
 import { AllConfigType } from '../config/config.type';
+import { UserType } from '../users/domain/enums/user-type.enum'; // Import UserType
 import { MailService } from '../mail/mail.service';
 import { RoleEnum } from '../roles/roles.enum';
 import { Session } from '../session/domain/session';
@@ -96,6 +97,7 @@ export class AuthService {
     const { token, refreshToken, tokenExpires } = await this.getTokensData({
       id: user.id,
       role: user.role,
+      userType: user.userType, // Pass userType
       sessionId: session.id,
       hash,
     });
@@ -150,6 +152,7 @@ export class AuthService {
         provider: authProvider,
         role,
         status,
+        userType: UserType.CLIENT, // Default to CLIENT for social registration
       });
 
       user = await this.usersService.findById(user.id);
@@ -181,6 +184,7 @@ export class AuthService {
     } = await this.getTokensData({
       id: user.id,
       role: user.role,
+      userType: user.userType, // Pass userType
       sessionId: session.id,
       hash,
     });
@@ -194,8 +198,10 @@ export class AuthService {
   }
 
   async register(dto: AuthRegisterLoginDto): Promise<void> {
+    // userType is now part of AuthRegisterLoginDto, and will be passed via ...dto
+    // to usersService.create, assuming CreateUserDto is updated.
     const user = await this.usersService.create({
-      ...dto,
+      ...dto, // This will include userType
       email: dto.email,
       role: {
         id: RoleEnum.user,
@@ -525,6 +531,7 @@ export class AuthService {
       role: {
         id: user.role.id,
       },
+      userType: user.userType, // Pass userType
       sessionId: session.id,
       hash,
     });
@@ -547,6 +554,7 @@ export class AuthService {
   private async getTokensData(data: {
     id: User['id'];
     role: User['role'];
+    userType: User['userType']; // Added userType to signature
     sessionId: Session['id'];
     hash: Session['hash'];
   }) {
@@ -561,6 +569,7 @@ export class AuthService {
         {
           id: data.id,
           role: data.role,
+          userType: data.userType, // Sign userType into JWT
           sessionId: data.sessionId,
         },
         {

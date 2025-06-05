@@ -24,6 +24,11 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 import { AllConfigType } from './config/config.type';
 import { SessionModule } from './session/session.module';
 import { MailerModule } from './mailer/mailer.module';
+import { ServicesModule } from './services/services.module';
+import { ReviewsModule } from './reviews/reviews.module';
+import { PlansModule } from './plans/plans.module';
+import { NotificationsModule } from './notifications/notifications.module';
+import { AvailabilityModule } from './availability/availability.module';
 
 const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
   useClass: TypeOrmConfigService,
@@ -85,6 +90,11 @@ import { unnamedsModule } from './unnameds/unnameds.module';
     MailModule,
     MailerModule,
     HomeModule,
+    ServicesModule,
+    ReviewsModule,
+    PlansModule,          // Added
+    NotificationsModule,  // Added
+    AvailabilityModule,   // Added
   ],
 })
 export class AppModule {}
